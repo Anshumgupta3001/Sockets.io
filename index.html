@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.io Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+    <style>
+        .green {
+            color: green;
+        }
+        .yellow {
+            color: yellow;
+        }
+        .red {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <ul id="user-list"></ul>
+    <script>
+        const socket = io();
+
+        socket.emit('user_connected', 1);
+
+        socket.on('user_list', (users) => {
+            const userList = document.getElementById('user-list');
+            userList.innerHTML = '';
+            users.forEach(user => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `User ${user.id}`;
+                userList.appendChild(listItem);
+            });
+        });
+
+        socket.on('message', (data) => {
+            const userList = document.getElementById('user-list');
+            const listItem = document.createElement('li');
+            listItem.textContent = `${data.userId}: ${data.message}`;
+            listItem.classList.add(data.color);
+            userList.appendChild(listItem);
+        });
+    </script>
+</body>
+</html>
